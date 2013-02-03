@@ -119,6 +119,7 @@ $('#home').live( 'pageinit',
 		        success: function(data){
                     github_id = data.data.login;
                     avatar = data.data.avatar_url;
+        $("avatar_image").src = avatar;
 
 
    		$.ajax({
@@ -196,7 +197,6 @@ $(document).ready( function() {
 $('#regist_profile').live( 'pageinit',
 	function(event){
 
-        $("avatar_image").src = avatar;
 
    		$.ajax({
 	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/master" + "" + "?access_token=" + access_token,
