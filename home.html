@@ -241,6 +241,7 @@ $('#regist_profile').live( 'pageinit',
 											        		 //$.base64.decode( a ));
 											        	}
 
+														/*
 											        	var div_list = $("#regist_q_list");
 											        	for(var i = 0; i< file_data.length; i++){
 															var div = $('<div data-role="fieldcontain">');
@@ -252,7 +253,7 @@ $('#regist_profile').live( 'pageinit',
 											        	}
 											        	div_list.appendTo( ".ui-page" ).trigger( "create" );
 											        	//$("#listview").listview("refresh");
-
+                                                       */
 
 									                    // alert(file_data);
 													}
@@ -505,12 +506,35 @@ $( '#repos_check' ).live( 'pageinit',
 <form action="" method="post" id="redist_profile_form">
 
     	<div id="regist_q_list">
-    		<!--
+    		
+
       <div data-role="fieldcontain">
-	    <label for="name">TEST</label>
-	    <input type="text" name="name" id="name" value="" />
+	    <label for="pg">Dou you like programing?</label>
+	    <input type="text" name="pg" id="pg" value="" />
       </div>
--->
+        <div data-role="fieldcontain">
+	    <label for="qiita">Do you user Qiita？</label>
+	    <input type="text" name="qiita" id="qiita" value="" />
+      </div>
+      <div data-role="fieldcontain">
+	    <label for="hoby">Do you have eny hobby?</label>
+	    <input type="text" name="hoby" id="hoby" value="" />
+      </div>
+      <div data-role="fieldcontain">
+	    <label for="tabaco">Do you smoke?</label>
+	    <input type="text" name="tabaco" id="tabaco" value="" />
+      </div>
+     <div data-role="fieldcontain">
+	    <label for="age">Do you like both older and younger?</label>
+	    <input type="text" name="age" id="age" value="" />
+      </div>
+     <div data-role="fieldcontain">
+	    <label for="age">What language do you love??</label>
+	    <input type="text" name="age" id="age" value="" />
+      </div>
+
+
+
 
   		</div>
       <input type="submit" value="REGIST" id="regist_button" />
