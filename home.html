@@ -119,7 +119,7 @@ $('#home').live( 'pageinit',
 		        success: function(data){
                     github_id = data.data.login;
                     avatar = data.data.avatar_url;
-        $("avatar_image").attr(src) = avatar;
+        $("avatar_image").attr( {src : avatar})  ;
 
 
    		$.ajax({
