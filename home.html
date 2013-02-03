@@ -106,10 +106,10 @@ draw_qa = function(qa_file_data)
 
 $('#home').live( 'pageinit',
 	function(event){
-		//var param = getUrlVars();
+		var param = getUrlVars();
 
-		access_token = $.cookie("github_access_token");
-
+		//access_token = $.cookie("github_access_token");
+access_token = param["access_token"];
    		$.ajax({
 	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/forks" + "?access_token=" + access_token,
 				type:"GET",
