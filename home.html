@@ -180,7 +180,8 @@ $(document).ready( function() {
 					$.mobile.changePage($("#profile"));
 				},
 				error: function(jqXHR, textStatus, errorThrown){
-						alert(textStatus+": "+errorThrown);
+					$.mobile.changePage($("#profile"));
+						//alert(textStatus+": "+errorThrown);
 				},
 				//dataType : 'jsonp',
 
