@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>rabicat</title>
+<link rel="stylesheet" href="jquery.mobile-1.2.0.css" />
+<script type="text/javascript" src="jquery-1.8.2.js"></script>
+<script type="text/javascript" src="jquery.mobile-1.2.0.js"></script>
+<script type="text/javascript" src="jquery.base64.js"></script>
+<script type="text/javascript" src="jquery.cookie.js"></script>
+<script type="text/javascript" src="base64.js"></script>
+<link rel="stylesheet" href="custom.css" />
+<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript">
+  var github_id = CONFIG.DEFAULT_USER;
+  var github_pass = CONFIG.DEFAULT_PASS;
+  this.access_token = "";
+  
+function getUrlVars()
+{
+	    var vars = [], hash;
+	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	    for(var i = 0; i < hashes.length; i++)
+	    {
+	        hash = hashes[i].split('=');
+	        vars.push(hash[0]);
+	        vars[hash[0]] = hash[1];
+	    }
+	    return vars;
+}
+
+var get_dir_sha = function(pare_dir_sha, dir_name, f){
+   		$.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/" + pare_dir_sha,
+				type:"GET",
+		        success: function(data){
+		        	var dir_sha = "";
+                    for(var i=0; i<data.tree.length; i++){
+                    	if(data.tree[i].type == "tree" && data.tree[i].path == dir_name){
+                    		dir_sha = data.tree[i].sha;
+                    	}
+                    }
+                    if(dir_sha == "")
+                    	return;
+
+                    f(dir_sha);
+				},
+
+				dataType : 'jsonp'
+       });
+}
+
+var get_file_sha = function(pare_dir_sha, file_name, f){
+   		$.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/" + pare_dir_sha,
+				type:"GET",
+		        success: function(data){
+		        	var file_sha = "";
+                    for(var i=0; i<data.tree.length; i++){
+                    	if(data.tree[i].path == file_name){
+                    		file_sha = data.tree[i].sha;
+                    	}
+                    }
+                    if(file_sha == "")
+                    	return;
+
+                    f(file_sha);
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				dataType : 'jsonp'
+       });
+}
+
+get_file_data = function(file_sha, f){
+   		$.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/blobs/" + file_sha,
+				type:"GET",
+		        success: function(data){
+		        	var file_data;
+		        	if(data.encoding == utf-8){
+
+		        	}
+		        	else{
+		        		// BASE64
+		        		file_data = $.base64.decode(data.content);
+		        	}
+
+                    f(file_data);
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				dataType : 'jsonp'
+       });
+}
+
+draw_qa = function(qa_file_data)
+{
+	alert(qa_file_data);
+}
+
+
+
+$('#home').live( 'pageinit',
+	function(event){
+		//var param = getUrlVars();
+
+		access_token = $.cookie("github_access_token");
+
+   		$.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/forks" + "?access_token=" + access_token,
+				type:"GET",
+	            //username: CONFIG.DEFAULT_USER,
+	            //password: CONFIG.DEFAULT_PASS,
+		        success: function(data){
+		        	// fork一覧から探す
+		        	var len = data.data.length;
+		        	var i = 0;
+		        	for(; i<len; i++){
+		        		if(data.data[i].owner.login == github_id ){
+		        			break;
+		        		}
+		        	}
+		        	if(i < len){
+						$.mobile.changePage($("#profile"));
+		        	}
+					else{
+						$.mobile.changePage($("#regist_profile"));
+					}
+
+					//$("#repo_check_result").html( data.data.message )
+
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				dataType : 'jsonp'
+       });
+ 
+    }
+);
+
+
+$(document).ready( function() {
+
+    $("#regist_button").click(
+      function(){
+      $.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT   + "/" + CONFIG.REPOS_NAME + "/forks" + "?access_token=" + access_token,
+				type:"POST",
+	             //username: CONFIG.DEFAULT_USER,
+	             //password: CONFIG.DEFAULT_PASS,
+		        success: function(data){
+					$.mobile.changePage($("#profile"));
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				//dataType : 'jsonp',
+
+       });
+    })
+});
+
+
+$('#regist_profile').live( 'pageinit',
+	function(event){
+
+   		$.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/master" + "" + "?access_token=" + access_token,
+				type:"GET", dataType : 'jsonp',
+		        success: function(data){
+		        	var dir_sha = "";
+                    for(var i=0; i<data.data.tree.length; i++){
+                    	if(data.data.tree[i].type == "tree" && data.data.tree[i].path == CONFIG.Q_DATA_DIRECTORY){
+                    		dir_sha = data.data.tree[i].sha;
+                    	}
+                    }
+                    if(dir_sha == "")
+                    	return;
+
+                    $.ajax({
+	      				url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/" + dir_sha+ "?access_token=" + access_token,
+							type:"GET", dataType : 'jsonp',
+		        			success: function(data){
+		        				var file_sha = "";
+                    			for(var i=0; i<data.data.tree.length; i++){
+                    				if(data.data.tree[i].path == CONFIG.Q_FILE_PATH){
+                    					file_sha = data.data.tree[i].sha;
+                    					}
+                    				}
+                    				if(file_sha == "")
+                    				return;
+
+			                       		$.ajax({
+										      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/blobs/" + file_sha+ "?access_token=" + access_token,
+													type:"GET",dataType : 'jsonp',
+											        success: function(data){
+											        	var file_data;
+											        	if(data.data.encoding == "utf-8"){
+											        		file_data = JSON.parse( ata.data.content );
+											        	}
+											        	else{
+											        		// BASE64
+											        		var ues = new String(encodeURI(data.data.content));
+											        		var a = ues.replace(/%0A/g, "");
+											        		//var ues = unescape(data.data.content);
+											        		//var a = ues.replace("\n", "");
+											        		console.log(base64.decodeStringAsUTF8( a ) );
+											        		file_data = JSON.parse( base64.decodeStringAsUTF8( a ) );
+
+
+											        		 //$.base64.decode( a ));
+											        	}
+
+											        	var div_list = $("#regist_q_list");
+											        	for(var i = 0; i< file_data.length; i++){
+															var div = $('<div data-role="fieldcontain">');
+															var lavel = $('<lavel for="q'+i+'">' +  '</label>' ) ;
+															div.append( lavel );
+															div.append( $('<input type="text" name="q'+i+'" id="q' + i +'"" />' )   );
+															div_list.append(div);
+															lavel.html( file_data[i].q) ;
+											        	}
+											        	div_list.appendTo( ".ui-page" ).trigger( "create" );
+											        	//$("#listview").listview("refresh");
+
+
+									                    // alert(file_data);
+													}
+									       });
+
+
+
+							}
+       				});
+
+
+
+				}
+       });
+
+
+/*
+   		$.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/",
+				type:"GET",
+		        success: function(data){
+		        	var dir_sha = "";
+                    for(var i=0; i<data.tree.length; i++){
+                    	if(data.tree[i].type == "tree" && data.tree[i].path == CONFIG.Q_DATA_DIRECTORY){
+                    		dir_sha = data.tree[i].sha;
+                    	}
+                    }
+                    if(dir_sha == "")
+                    	return;
+
+			   		$.ajax({
+				      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/" + dir_sha,
+							type:"GET",
+					        success: function(data){
+					        	var file_sha = "";
+			                    for(var i=0; i<data.tree.length; i++){
+			                    	if(data.tree[i].path == CONFIG.CONFIG.Q_FILE_PATH){
+			                    		file_sha = data.tree[i].sha;
+			                    	}
+			                    }
+			                    if(file_sha == "")
+			                    	return;
+			                    
+
+
+
+
+
+							},
+							error: function(jqXHR, textStatus, errorThrown){
+									alert(textStatus+": "+errorThrown);
+							},
+							dataType : 'jsonp'
+			       });
+
+
+
+
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				dataType : 'jsonp'
+       });
+ */
+    }
+);
+
+
+
+
+
+
+
+  // ログイン処理
+  /*$(document).ready( function() {
+    $("#login_button").click(
+      function(){
+      	  document.location = "https://github.com/login/oauth/authorize?client_id=6262e3ec0c7369b8399c"; 
+    }); // login_button
+*/
+/*
+    $("#login_button").click(
+      function(){
+      $.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + github_id  + "/" + CONFIG.REPOS_NAME + "/forks",
+//url: CONFIG.GITHUB_API + "repos/norinori2222/boyfriend_require/forks",
+//https://api.github.com/repos/norinori2222/boyfriend_require/forks
+				type:"GET",
+	            username: CONFIG.DEFAULT_USER,
+	            password: CONFIG.DEFAULT_PASS,
+		        success: function(data){
+		        	// fork一覧から探す
+		        	var len = data.length;
+		        	var i = 0;
+		        	for(; i<len; i++){
+		        		if(data[i].owner.login == github_id ){
+		        			break;
+		        		}
+		        	}
+		        	if(i < len){
+						$.mobile.changePage($("#profile"));
+		        	}
+					else{
+						$.mobile.changePage($("#regist_profile"));
+					}
+
+					//$("#repo_check_result").html( data.data.message )
+
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				dataType : 'jsonp',
+				beforeSend: function(xhr) {
+					var credentials = $.base64.encode("takutok:gagagatetete77");
+				    xhr.setRequestHeader("Authorization", "Basic " + credentials);
+				},
+       });
+    }); // login_button
+*/
+
+
+
+
+
+
+
+
+
+
+/*
+// forkする
+    $("#regist_button").click(
+      function(){
+      $.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT   + "/" + CONFIG.REPOS_NAME + "/forks" + "?access_token=" + access_token,
+				type:"POST",
+	             //username: CONFIG.DEFAULT_USER,
+	             //password: CONFIG.DEFAULT_PASS,
+		        success: function(data){
+					$.mobile.changePage($("#profile"));
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				//dataType : 'jsonp',
+
+       });
+    }) // regist_button
+*/
+
+
+
+
+
+ // });
+/*
+$( '#repos_check' ).live( 'pageinit',
+	function(event){
+      $.ajax({
+	      url: CONFIG.GITHUB_API + "repos/" + github_id  + "/" + CONFIG.REPOS_NAME,
+	             username:CONFIG.DEFAULT_USER,
+	             password:CONFIG.DEFAULT_PASS,
+		        success: function(data){
+
+					$("#repo_check_result").html( data.data.message )
+
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+						alert(textStatus+": "+errorThrown);
+				},
+				dataType : 'jsonp',
+				beforeSend: function(xhr) {
+					var credentials = $.base64.encode("takutok:gagagatetete77");
+				    xhr.setRequestHeader("Authorization", "Basic " + credentials);
+				},
+       });
+    }
+);
+
+*/
+
+
+
+
+
+</script>
+</head>
+<body>
+
+
+<!--
+<div data-role="page" id="login">
+  <div data-role="header">
+    <h1 style="text-align:center">rabicat ログイン</h1>
+  </div>
+
+  <div data-role="content"> 
+  <div class="login_div">
+	GitHub Login
+		<br>
+
+   <div style="display:inline">ID:<input type="text" id="github_id"></div>
+   <br>
+   <div style="display:inline">PASSWORD:<input type="password" id="github_pass"></div>
+   <br>
+  </div>
+  <input type="submit" value="LOGIN" id="login_button">
+  
+  <br>
+  </div>
+  <div data-role="footer">
+    Copyright 2013, rabicat
+  </div>
+</div>
+-->
+<!-- login -->
+
+
+<div data-role="page" id="home">
+  <!--（3）ヘッダ／コンテンツ／フッタを定義-->
+  <div data-role="header" data-theme="c">
+    <h1 style="text-align:center"></h1>
+  </div>
+  <br>
+  <div data-role="content" data-theme="d"> 
+  <div class="login_div">
+	Loading....
+		<br>
+
+   <br>
+  </div>
+  
+  <br>
+  </div>
+  <div data-role="footer" data-theme="c">
+    
+  </div>
+</div><!-- home -->
+
+
+
+
+  <div data-role="page" id="regist_profile">
+  	<div data-role="header" data-theme="c">
+      <h1 style="text-align:center">登録〜Regist〜</h1>
+    </div>
+    <div data-role="content" data-theme="d"> 
+<form action="" method="post" id="redist_profile_form">
+
+    	<div id="regist_q_list">
+      <div data-role="fieldcontain">
+	    <label for="name">TEST</label>
+	    <input type="text" name="name" id="name" value="" />
+      </div>
+
+
+  		</div>
+      <input type="submit" value="REGIST" id="regist_button" />
+
+</form>
+    </div>
+
+    <div data-role="footer" data-theme="c" style="text-align:center">
+      Copyright 2013, rabicat
+    </div>
+  </div><!-- regist_profile -->
+
+
+  <div data-role="page" id="profile" data-theme="d">
+  	<div data-role="header" 　data-theme="e">
+    <h1 style="text-align:center">profile</h1>
+    <a href="#regist_profile">regist profile</a> 
+  </div>
+  <div data-role="content"　data-theme="d"> 
+  
+  <div id="div_profile_main">
+    <div id="div_profile_container">
+      <div class="div_profile_columns">
+        <div class="div_profile_left">
+			<div class="div_profile_avatared">
+            	<span>
+            		<a href="http://gravatar.com/emails/">
+            			<img width="210" height="210" src="https://secure.gravatar.com/avatar/b76e06665d0534aec2ef38c68b8404ea?s=420&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png">
+            		</a>
+            	</span>
+
+            	<h1>
+               	 <span>Takuto Kimura</span>
+               	 <em>takutok</em>
+            	</h1>
+
+            	<div class="div_profile_details">
+              		<dl><dt><span class="mini-icon mini-icon-location"></span></dt><dd itemprop="homeLocation">Tokyo</dd></dl>
+
+              		<dl><dt><span class="mini-icon mini-icon-unread-note"></span></dt><dd><a class="email js-obfuscate-email" data-email="%74%61%6b%75%74%6f%40%74%61%6b%75%74%6f%6b%2e%6a%70" href="mailto:takuto@takutok.jp">takuto@takutok.jp</a></dd></dl>
+              		
+              		<dl><dt><span class="mini-icon mini-icon-link"></span></dt><dd itemprop="url"><a href="http://takuto.info/" class="url" rel="nofollow me">http://takuto.info/</a></dd></dl>
+              		
+              		<dl><dt><span class="mini-icon mini-icon-time"></span></dt><dd><span class="join-label">Joined on </span><span class="join-date">Sep 07, 2011</span></dd></dl>
+            	</div>
+                <ul class="div_profile_stats">
+                  <li>
+                    <a href="">
+                      <strong>0</strong>
+                      <span>followers</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <strong>0</strong>
+                      <span>starred</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <strong>0</strong>
+                        <span>following</span>
+                    </a>
+                  </li>
+                </ul>
+
+
+        	</div>
+
+
+
+        </div>
+        <div class="div_profile_right">
+
+        <div class="div_profile_right_content">
+          <div class="div_profile_right_content_tab">
+            <div class="div_profile_right_content_grid">
+              <div class="div_profile_right_content_col">
+                <div class="div_profile_right_content_capped_box" style="height: 140px;">
+                  <h3>Profile</h3>
+                    <ol class="div_profile_right_content_profile_list">
+                      <li>
+                        <a>
+                          <span class="div_profile_right_content_profile_list_span">
+                            <span>
+                              <span>test</span>
+                            </span>
+                          </span>
+                          <span class="div_profile_right_content_profile_list_rdesc">testtest</span>
+                        </a>
+                      </li>
+                    </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    </div>
+  </div><!-- div_profile -->
+
+  </div>
+  <div data-role="footer" 　data-theme="c" style="text-align:center">
+    Copyright 2013, rabicat
+  </div>
+  </div><!-- profile -->
+
+
+
+
+</body>
+</html>

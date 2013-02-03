@@ -1,0 +1,248 @@
+.login_div{
+  text-align: center;
+}
+
+#github_id{
+width:100px;
+}
+
+#github_pass{
+	width:100px;
+}
+
+#div_profile_main{
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+
+#div_profile_container:first-child {
+    margin-top: 20px;
+}
+#div_profile_container {
+    margin: 0 auto;
+    width: 920px;
+}
+.div_profile_columns{
+    display: block;
+}
+.div_profile_left{
+    float: left;
+    width: 220px;
+}
+
+.div_profile_avatared {
+    position: relative;
+}
+.div_profile_avatared span a{
+    color: #4183C4;
+    text-decoration: none;
+}
+
+.div_profile_avatared span a img{
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    height: 210px;
+    padding: 5px;
+    width: 210px;
+}
+
+.div_profile_avatared h1{
+    color: #495961;
+    font-size: 26px;
+    letter-spacing: -1px;
+    margin-top: 6px;
+    font-weight: bold;
+}
+
+.div_profile_avatared h1 span{
+    display: inline-block;
+    line-height: 26px;
+    margin-bottom: -12px;
+    overflow-x: hidden;
+    padding-bottom: 4px;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.div_profile_avatared  h1 em {
+    color: #666666;
+    display: inline-block;
+    font-family: "Helvetica Neue",Helvetica,arial,freesans,clean,sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 24px;
+    margin-bottom: 12px;
+    overflow-x: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    top: -2px;
+    vertical-align: top;
+    width: 100%;
+}
+
+
+.div_profile_details {
+    border-bottom: 1px solid #DDDDDD;
+    border-top: 1px solid #DDDDDD;
+    margin: 0 0 8px;
+    padding: 18px 0 15px;
+}
+
+.div_profile_details dl{
+    margin-top: 0;
+    font-size: 14px;
+}
+
+.div_profile_details dl dt {
+    color: #D0D0D0;
+    float: left;
+    margin: 0;
+    width: 22px;
+}
+
+.div_profile_details dl dd {
+    margin: 0 0 0 22px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    width: 195px;
+}
+
+.div_profile_stats {
+    border-bottom: 1px solid #DDDDDD;
+    margin: 0 0 17px;
+    padding: 6px 0 15px;
+}
+
+.div_profile_stats li {
+    display: inline-block;
+    list-style-type: none;
+    min-width: 70px;
+}
+
+.div_profile_stats li a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+.div_profile_stats li a strong {
+    color: #222222;
+    display: block;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.div_profile_stats li a span {
+    color: #999999;
+    display: block;
+    font-size: 11px;
+    margin-top: -2px;
+}
+
+.div_profile_right{
+   float: right;
+    width: 680px;
+}
+
+.div_profile_right_content{
+   position: relative;
+}
+
+.div_profile_right_content_tab{
+    margin-top: 20px;
+}
+
+.div_profile_right_content_grid{
+
+}
+
+.div_profile_right_content_col{
+    padding: 0;
+    display: table-cell;
+    width: 1%;
+}
+
+.div_profile_right_content_capped_box{
+    width: 100%;
+    -moz-box-sizing: border-box;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    margin-bottom: 20px;
+}
+
+.div_profile_right_content_capped_box h3{
+    font-size: 14px;
+    background: none repeat scroll 0 0 #F7F7F7;
+    border-bottom: 1px solid #DDDDDD;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    line-height: 100%;
+    margin: 0;
+    padding: 10px;
+     font-weight: bold;
+
+}
+
+.div_profile_right_content_profile_list{
+    list-style: none outside none;
+}
+
+.div_profile_right_content_profile_list li{
+
+}
+
+.div_profile_right_content_profile_list li a{
+    border-bottom: 1px solid #E5E5E5;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    height: 40px;
+    padding: 6px 10px 5px 32px;
+    position: relative;
+    color: #4183C4;
+    text-decoration: none;
+}
+
+.div_profile_right_content_profile_list_span{
+    max-width: 250px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.div_profile_right_content_profile_list_span span{
+    font-size: 14px;
+    font-weight: bold;
+    color: #4183C4;
+]
+
+.div_profile_right_content_profile_list_rdesc{
+    max-width: 250px;
+   color: #777777;
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    margin-top: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+
+
+
+
+
+
+
+
+
+
