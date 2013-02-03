@@ -15,6 +15,7 @@
 <script type="text/javascript">
   var github_id;// = CONFIG.DEFAULT_USER;
   var github_pass;// = CONFIG.DEFAULT_PASS;
+  var avatar = "";
   this.access_token = "";
   
 function getUrlVars()
@@ -117,6 +118,7 @@ $('#home').live( 'pageinit',
 				type:"GET",
 		        success: function(data){
                     github_id = data.data.login;
+                    avatar = data.data.avatar_url;
 
 
    		$.ajax({
@@ -193,6 +195,8 @@ $(document).ready( function() {
 
 $('#regist_profile').live( 'pageinit',
 	function(event){
+
+        $("avatar_image").src = avatar;
 
    		$.ajax({
 	      url: CONFIG.GITHUB_API + "repos/" + CONFIG.REPOS_PARENT  + "/" + CONFIG.REPOS_NAME + "/git/trees/master" + "" + "?access_token=" + access_token,
@@ -562,7 +566,7 @@ $( '#repos_check' ).live( 'pageinit',
 			<div class="div_profile_avatared">
             	<span>
             		<a href="http://gravatar.com/emails/">
-            			<img width="210" height="210" src="https://secure.gravatar.com/avatar/b76e06665d0534aec2ef38c68b8404ea?s=420&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png">
+            			<img width="210" height="210" src="" id="avatar_image">
             		</a>
             	</span>
 
