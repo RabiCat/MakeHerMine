@@ -116,7 +116,7 @@ $('#home').live( 'pageinit',
 	      url: CONFIG.GITHUB_API + "user" + "?access_token=" + access_token,
 				type:"GET",
 		        success: function(data){
-                    github_id = data.login;
+                    github_id = data.data.login;
 
 
    		$.ajax({
