@@ -38,7 +38,7 @@ else {
     parse_str($res, $output);
 
     setcookie('github_access_token', $output['access_token']);
-    header("Location: http://pgmy.github.com/MakeHerMine/home.html?access_token=".$output['access_token'] );
+    header("Location: http://rabicat.github.com/MakeHerMine/home.html?access_token=".$output['access_token'] );
     //http_redirect('home.html2');
 }
 
